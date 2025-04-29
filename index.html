@@ -105,6 +105,18 @@
             font-weight: bold;
         }
 
+        .today {
+            background-color: #ff9800;
+            color: white;
+            font-weight: bold;
+        }
+
+        .time {
+            text-align: center;
+            font-size: 18px;
+            margin-top: 20px;
+        }
+
         @media (max-width: 600px) {
             .toggle-btn {
                 width: 100%;
@@ -138,6 +150,10 @@
         </div>
     </div>
 
+    <div class="time">
+        <span id="time"></span>
+    </div>
+
     <script>
         let currentLang = 'ne';
 
@@ -159,6 +175,10 @@
         ];
 
         const startingDays = [1, 4, 0, 4, 0, 3, 6, 1, 2, 3, 5, 0]; // Updated for the correct starting days
+
+        // Today's Nepali date manually
+        const todayNepaliDate = 16; // Nepali date: 16th Baisakh
+        const todayNepaliMonth = 0; // Baisakh is the first month (0-based index)
 
         function toggleLanguage() {
             currentLang = currentLang === 'ne' ? 'en' : 'ne';
@@ -201,6 +221,12 @@
                     let dayDiv = document.createElement('div');
                     dayDiv.classList.add('day');
                     dayDiv.textContent = j;
+
+                    // Automatically highlight today's date (16th Baisakh)
+                    if (i === todayNepaliMonth && j === todayNepaliDate) {
+                        dayDiv.classList.add('today');
+                    }
+
                     daysContainer.appendChild(dayDiv);
                 }
 
@@ -208,6 +234,23 @@
                 monthsContainer.appendChild(monthDiv);
             }
         }
+
+        // Function to get Nepali Time (Nepal Time)
+        function getNepaliTime() {
+            const now = new Date();
+            const offset = 5.75; // Nepal is UTC +5:45
+            const nepaliTime = new Date(now.getTime() + (offset * 60 * 60 * 1000));
+
+            let hours = nepaliTime.getHours();
+            let minutes = nepaliTime.getMinutes();
+            let seconds = nepaliTime.getSeconds();
+            let timeString = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            
+            document.getElementById("time").innerText = `Nepali Time: ${timeString}`;
+        }
+
+        // Update the time every second
+        setInterval(getNepaliTime, 1000);
 
         generateCalendar();
     </script>
